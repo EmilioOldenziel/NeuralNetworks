@@ -6,10 +6,10 @@ q_ind = 1;
 
 for a = alphas
     Q = 0;   
-    a
+
     for run = 1:nd
         % Initialization values
-        N = 500;
+        N = 20;
         P = a*N;
         max_epochs = 100;
 
@@ -24,16 +24,22 @@ for a = alphas
         error = zeros(1, P);
         
         for i = 1:max_epochs
+            count = 0;
             for j = 1:P
 
                 error(j) = (weights * data(j,:)') * label(j);
                 if (error(j) <= 0)
                     weights = weights + 1 / N * data(j,:) * label(j);
+                else
+                    count = count + 1;
                 end
             end
-            if all(error > 0)
+            for j = 1:P
+                if (error(j) <= 0)
+            % Successful
+            if count == P
                 Q = Q + 1;
-                break;
+                break
             end
         end
     end
