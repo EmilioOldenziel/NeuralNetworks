@@ -49,6 +49,6 @@ end
 
 plot(Q_list)
 set(gca,'XTickLabel',[0 0.5 1 1.5 2 2.5 3]);
-title("Fraction of succesful runs as a function of a")
-xlabel("a = P/N")
-ylabel("Q")
+title('Fraction of succesful runs as a function of \alpha')
+xlabel('\alpha = P/N')
+ylabel('Q')
