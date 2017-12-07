@@ -1,4 +1,4 @@
-nd = 50;
+nd = 200;
 
 alphas = 0.1:0.1:3;
 
@@ -14,9 +14,9 @@ for a = alphas
     a
     parfor run = 1:nd
         % Initialization values
-        N = 20;
+        N = 200;
         P = round(a*N);
-        max_epochs = 100;
+        max_epochs = 500;
 
         % Generate P datapoints from N-dimensional gaussian (mean = 0, std = 1)
         data = 0 + sqrt(1) * randn(P, N);
@@ -55,6 +55,6 @@ end
 plot(alphas, Q_list)
 xlim([0 4]);
 ylim([0 1]);
-title('Fraction of succesful runs as a function of \alpha')
+title(['Fraction of succesful runs as a function of \alpha']);
 xlabel('\alpha = P/N')
 ylabel('Q')

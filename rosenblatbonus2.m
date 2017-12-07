@@ -1,8 +1,8 @@
-nd = 50;
+nd = 200;
 
 alphas = 0.25:0.25:3;
 
-useBias = 0;
+useBias = 1;
 
 thresholds = [0:0.2:1];
 
@@ -16,9 +16,9 @@ for t = thresholds
         t, a
         parfor run = 1:nd
             % Initialization values
-            N = 20;
+            N = 200;
             P = round(a*N);
-            max_epochs = 100;
+            max_epochs = 500;
 
             % Generate P datapoints from N-dimensional gaussian (mean = 0, std = 1)
             data = 0 + sqrt(1) * randn(P, N);

@@ -2,8 +2,6 @@ nd = 50;
 
 alphas = 0.25:0.25:3;
 
-%useBias = 0;
-
 Ns = [20 50 100 200 500];
 
 pool = gcp();
@@ -22,10 +20,6 @@ for N = Ns
             % Generate P datapoints from N-dimensional gaussian (mean = 0, std = 1)
             data = 0 + sqrt(1) * randn(P, N);
 
-            %if useBias == 1
-            %    data = [data ones(1, P)'];
-            %    N = N + 1;
-            %end
             % Generate P labels being -1 or 1 
             label = randi([0 1], 1, P) * 2 - 1;
 
