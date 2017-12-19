@@ -2,11 +2,12 @@ nd = 100;
 
 alphas = 0.25:0.25:6;
 
-error_final = [];
+kappa_final = [];
 
 for a = alphas
     Q = 0;    
-    cumerror = [];
+    cumkappa = [];
+    a
     for run = 1:nd
         % Initialization values
         N = 100;
@@ -18,8 +19,8 @@ for a = alphas
 
         weights = zeros(1, N);
         
-        % Generate labels such that they are linearly seperable
-        % By the teacher perceptron.
+        % Generate random P labels being -1 or 1 
+        %label = randi([0 1], 1, P) * 2 - 1;
         label = sign(ones(1, N) * data'); 
 
         % Use just as many weights as inputs
@@ -35,15 +36,17 @@ for a = alphas
                 break;
             end
         end
-        error = (1 / pi) * acos((weights * ones(1, N)') / ((abs(weights) * abs(ones(1,N))')));
-        cumerror = [cumerror error];
+        
+        stability = data * weights' .* label' / norm(weights);
+        [val, idx] = max(stability);
+        cumkappa = [cumkappa val];
     end
-    error_final = [error_final, mean(cumerror)];
+    kappa_final = [kappa_final, mean(cumkappa)];
 end
 
 figure;
-plot(alphas,error_final);
-title(['Generalisation error, n_{d}=' num2str(nd) ' N=' num2str(N)]);
+plot(alphas,kappa_final);
+title(['Maximum stability vs alpha, n_{d}=' num2str(nd) ' N=' num2str(N)]);
 xlabel('\alpha');
-ylabel('generalisation error \epsilon_{g}');
+ylabel('Maximum stability \kappa_{max}');
 
