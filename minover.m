@@ -1,49 +1,63 @@
-nd = 100;
+nd = 50;
 
-alphas = 0.25:0.25:6;
+alphas = 0.25:0.25:10;
 
-error_final = [];
+Ns = [10 20 50 100 200 500];
 
-for a = alphas
-    Q = 0;    
-    cumerror = [];
-    for run = 1:nd
-        % Initialization values
-        N = 100;
-        P = round(a*N);
-        max_epochs = 3000;
+% generalisation error curve for every N
+gen_error = zeros(length(alphas),length(Ns));
 
-        % Generate P datapoints from N-dimensional gaussian (mean = 0, std = 1)
-        data = 0 + sqrt(1) * randn(P, N);
+for N=Ns
+    N
+    for a = alphas
+        cumerror = [];
+        for run = 1:nd
+            % Initialization values
+            P = round(a*N);
+            max_epochs = 3000;
 
-        weights = zeros(1, N);
-        
-        % Generate labels such that they are linearly seperable
-        % By the teacher perceptron.
-        label = sign(ones(1, N) * data'); 
+            % Generate P datapoints from N-dimensional gaussian (mean = 0, std = 1)
+            data = 0 + sqrt(1) * randn(P, N);
 
-        % Use just as many weights as inputs
-        old_weights = weights;
+            weights = zeros(1, N);
+            % Generate P labels being -1 or 1 
+            label = sign(ones(1, N) * data'); 
 
-        for i = 1:max_epochs
-            stability = data * weights' .* label' / norm(weights);
-            [val, idx] = min(stability);
+            % Use just as many weights as inputs
             old_weights = weights;
-            weights = weights + data(idx,:) .* label(idx) / N;
-            diff = norm(abs((weights - old_weights)./old_weights));
-            if (diff < 0.1)
-                break;
+
+            for i = 1:max_epochs
+                stability = data * weights' .* label' / norm(weights);
+                [val, idx] = min(stability);
+                old_weights = weights;
+                weights = weights + data(idx,:) .* label(idx) / N;
+                diff = norm(abs((weights - old_weights)./old_weights));
+                if (diff < 0.1)
+                    break;
+                end
             end
+            error = (1 / pi) * acos((weights * ones(1, N)') / ((abs(weights) * abs(ones(1,N))')));
+            cumerror = [cumerror error];
         end
-        error = (1 / pi) * acos((weights * ones(1, N)') / ((abs(weights) * abs(ones(1,N))')));
-        cumerror = [cumerror error];
+        % insert gen_error
+        ii = find(Ns == N);
+        jj = find(alphas == a);
+        gen_error(ii,jj) = mean(cumerror);
     end
-    error_final = [error_final, mean(cumerror)];
 end
+ 
+%%
 
 figure;
-plot(alphas,error_final);
-title(['Generalisation error, n_{d}=' num2str(nd) ' N=' num2str(N)]);
+l = [];
+% plot curve for each N
+for i=1:1:length(Ns)
+    plot(alphas,gen_error(i,:));
+    hold on;
+    % legenda labels
+    l = strvcat(l, ['N=' num2str(Ns(1,i))])
+end
+title(['Generalisation error, n_{d}=' num2str(nd)]);
 xlabel('\alpha');
 ylabel('generalisation error \epsilon_{g}');
-
+legend(l);
