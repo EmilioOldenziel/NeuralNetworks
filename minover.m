@@ -1,4 +1,4 @@
-nd = 50;
+nd = 500;
 
 alphas = 0.25:0.25:6;
 
@@ -32,6 +32,7 @@ for a = alphas
             weights = weights + data(idx,:) .* label(idx) / N;
             diff = norm(abs((weights - old_weights)./old_weights));
             if (diff < 0.1)
+                diff
                 break;
             end
         end
