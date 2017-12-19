@@ -1,17 +1,19 @@
-nd = 100;
+nd = 50;
 
 alphas = 0.25:0.25:3;
 Q_list = zeros(1, length(alphas));
 q_ind = 1;
 
+pool = gcp();
+
 for a = alphas
     Q = 0;   
     a
-    for run = 1:nd
+    parfor run = 1:nd
         % Initialization values
-        N = 500;
-        P = a*N;
-        max_epochs = 100;
+        N = 20;
+        P = round(a*N);
+        max_epochs = 500;
 
         % Generate P datapoints from N-dimensional gaussian (mean = 0, std = 1)
         data = 0 + sqrt(1) * randn(P, N);
@@ -43,8 +45,10 @@ for a = alphas
     q_ind = q_ind + 1;
 end
 
-plot(Q_list)
-set(gca,'XTickLabel',[0 0.5 1 1.5 2 2.5 3]);
+plot(alphas,Q_list)
+xlim([0 4]);
+ylim([0 1]);
+%set(gca,'XTickLabel',[0 0.5 1 1.5 2 2.5 3]);
 title('Fraction of succesful runs as a function of \alpha')
 xlabel('\alpha = P/N')
 ylabel('Q')
