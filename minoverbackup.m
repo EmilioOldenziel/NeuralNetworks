@@ -1,4 +1,4 @@
-nd = 100;
+nd = 50;
 
 alphas = 0.25:0.25:6;
 
@@ -7,31 +7,30 @@ error_final = [];
 for a = alphas
     Q = 0;    
     cumerror = [];
+    a
     for run = 1:nd
         % Initialization values
-        N = 100;
+        N = 20;
         P = round(a*N);
-        max_epochs = 3000;
+        max_epochs = 1000;
 
         % Generate P datapoints from N-dimensional gaussian (mean = 0, std = 1)
         data = 0 + sqrt(1) * randn(P, N);
 
-        weights = zeros(1, N);
+        weights = ones(1, N);
         % Generate P labels being -1 or 1 
         label = sign(ones(1, N) * data'); 
 
         % Use just as many weights as inputs
+        error = zeros(1, P);
         old_weights = weights;
 
         for i = 1:max_epochs
-            stability = data * weights' .* label' / norm(weights);
+            %stability = weights ./ abs(weights) * data' .* label;
+            stability = (data' .* label)' .* weights / abs(weights);
             [val, idx] = min(stability);
             old_weights = weights;
-            weights = weights + data(idx,:) .* label(idx) / N;
-            diff = norm(abs((weights - old_weights)./old_weights));
-            if (diff < 0.1)
-                break;
-            end
+            weights = weights + 1 / N * data(idx,:) * label(idx);
         end
         error = (1 / pi) * acos((weights * ones(1, N)') / ((abs(weights) * abs(ones(1,N))')));
         cumerror = [cumerror error];
@@ -39,9 +38,4 @@ for a = alphas
     error_final = [error_final, mean(cumerror)];
 end
 
-figure;
-plot(alphas,error_final);
-title(['Generalisation error, n_{d}=' num2str(nd) ' N=' num2str(N)]);
-xlabel('\alpha');
-ylabel('generalisation error \epsilon_{g}');
-
+plot(error_final)
