@@ -14,11 +14,11 @@ test_class1 = X(test_ind1, :);
 test_class1_label = labels(test_ind1);
 
 train_ind2 = randperm(75, 0.8*75);
-test_ind2 = setdiff(1:75, train_ind1);
+test_ind2 = setdiff(1:75, train_ind2);
 train_class2 = X(train_ind2 + 75,:);
-train_class2_label = labels(train_ind2);
+train_class2_label = labels(train_ind2 + 75);
 test_class2 = X(test_ind2 + 75, :);
-test_class2_label = labels(test_ind2);
+test_class2_label = labels(test_ind2 + 75);
 
 traindata = [train_class1; train_class2];
 trainlabels = [train_class1_label; train_class2_label];
@@ -26,14 +26,14 @@ trainlabels = [train_class1_label; train_class2_label];
 testdata = [test_class1; test_class2];
 testlabels = [test_class1_label; test_class2_label];
 
-nd = 50;
+nd = 1;
 
 N = 2;
 P_train = length(traindata);
 P_test = length(testdata);
 
 usebias = 1;
-max_epochs = 3000;
+max_epochs = 100;
 
 if usebias == 1
     N = N + 1;
@@ -41,36 +41,34 @@ if usebias == 1
     testdata = [testdata ones(1, P_test)'];
 end
 
-% generalisation error curve for every N
-gen_error = zeros(length(alphas),length(Ns));
+totalcorrect = [];
 
 for run = 1:nd
     correct = 0;
     weights = zeros(1, N);
-    % Generate P labels being -1 or 1 
-    data = traindata;
-    label = trainlabels';
 
     % Use just as many weights as inputs
     old_weights = weights;
 
     for i = 1:max_epochs
-        stability = data * weights' .* label' / norm(weights);
+        correct = 0;
+        stability = traindata * weights' .* trainlabels / norm(weights);
         [val, idx] = min(stability);
         old_weights = weights;
-        weights = weights + data(idx,:) .* label(idx) / N;
+        weights = weights + traindata(idx,:) .* trainlabels(idx) / N;
         diff = norm(abs((weights - old_weights)./old_weights));
-        if (diff < 0.1)
+        if (diff < 0.001)
             break;
         end
+        for p = 1:P_test
+            if testdata(p,:) * weights' * testlabels(p) > 0
+               correct = correct + 1;
+            end
+        end
+        correct
+        totalcorrect = [totalcorrect correct / P_test];
     end
-    
-    for p = 1:P_test
-        if 
-        data(p,:) * weights' .* label(p)
-    end
-    error = (1 / pi) * acos((weights * ones(1, N)') / ((abs(weights) * abs(ones(1,N))')));
-    cumerror = [cumerror error];
+    plot(1:max_epochs, totalcorrect);
 end
 
 
