@@ -6,19 +6,19 @@ labels=grp2idx(species);
 labels(labels==2)=-1; 
 labels(labels==3)=-1;
 
-train_ind1 = randperm(75, 0.8*75);
-test_ind1 = setdiff(1:75, train_ind1);
+train_ind1 = randperm(50, 0.8*50);
+test_ind1 = setdiff(1:50, train_ind1);
 train_class1 = X(train_ind1,:);
 train_class1_label = labels(train_ind1);
 test_class1 = X(test_ind1, :);
 test_class1_label = labels(test_ind1);
 
-train_ind2 = randperm(75, 0.8*75);
-test_ind2 = setdiff(1:75, train_ind2);
-train_class2 = X(train_ind2 + 75,:);
-train_class2_label = labels(train_ind2 + 75);
-test_class2 = X(test_ind2 + 75, :);
-test_class2_label = labels(test_ind2 + 75);
+train_ind2 = randperm(100, 0.8*100);
+test_ind2 = setdiff(1:100, train_ind2);
+train_class2 = X(train_ind2 + 50,:);
+train_class2_label = labels(train_ind2 + 50);
+test_class2 = X(test_ind2 + 50, :);
+test_class2_label = labels(test_ind2 + 50);
 
 traindata = [train_class1; train_class2];
 trainlabels = [train_class1_label; train_class2_label];
@@ -65,10 +65,13 @@ for run = 1:nd
                correct = correct + 1;
             end
         end
-        correct
+        %correct
         totalcorrect = [totalcorrect correct / P_test];
     end
     plot(1:max_epochs, totalcorrect);
+    title(['Test accuracy vs epoch']);
+    xlabel('epoch');
+    ylabel('Test accuracy');
 end
 
 

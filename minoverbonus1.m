@@ -1,6 +1,6 @@
 nd = 100;
 
-alphas = 0.25:0.25:6;
+alphas = 0.25:0.25:12;
 
 kappa_final = [];
 
