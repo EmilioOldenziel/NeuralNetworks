@@ -1,12 +1,11 @@
 nd = 100;
 
-alphas = 0.25:0.25:10;
+alphas = 0.25:0.25:12;
 
 kappa_final = [];
 kappa_final_var = [];
 
 for a = alphas
-    Q = 0;    
     cumkappa = [];
     a
     for run = 1:nd
@@ -38,8 +37,9 @@ for a = alphas
             end
         end
         
+        % Calculate kmax after training
         stability = data * weights' .* label' / norm(weights);
-        [val, idx] = max(stability);
+        [val, idx] = min(stability);
         cumkappa = [cumkappa val];
     end
     kappa_final = [kappa_final, mean(cumkappa)];

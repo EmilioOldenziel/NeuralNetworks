@@ -7,7 +7,7 @@ lambda = [0 0.1 0.2 0.3 0.4 0.5];
 % generalisation error curve for every N
 gen_error = zeros(length(alphas),length(Ns));
 for l = lambda
-    N
+    l
     for a = alphas
         a
         cumerror = [];
@@ -33,8 +33,10 @@ for l = lambda
 
             % Use just as many weights as inputs
             old_weights = weights;
-
+            
+            error = zeros(1, P);
             for i = 1:max_epochs
+                % MINOVER
                 stability = data * weights' .* label' / norm(weights);
                 [val, idx] = min(stability);
                 old_weights = weights;
@@ -43,6 +45,18 @@ for l = lambda
                 if (diff < 0.1)
                     break;
                 end
+                % SWITCH FOR ROSENBLATT PERCEPTRON
+                %for j = 1:P
+
+                    %error(j) = (weights * data(j,:)') * label(j);
+                    %if (error(j) <= 0)
+                        %weights = weights + 1 / N * data(j,:) * label(j);
+                    %end
+                %end
+                %if all(error > 0)
+                    %Q = Q + 1;
+                    %break;
+                %end
             end
             error = (1 / pi) * acos((weights * ones(1, N)') / ((abs(weights) * abs(ones(1,N))')));
             cumerror = [cumerror error];
