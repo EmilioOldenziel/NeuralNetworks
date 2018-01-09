@@ -4,7 +4,7 @@ dat = load("assignment3_data");
 data = dat.xi;
 data = data';
 
-train_len = length(data) * 0.95;
+train_len = length(data) * 0.80;
 test_len = length(data) - train_len;
 
 data_train = data(1:train_len,:);
@@ -23,7 +23,7 @@ label_test = label(train_len + 1:end);
 % P = 4
 
 max_epochs = 100;
-lr = 0.01;
+lr = 0.02;
 
 w1 = randi([0 1], 1, N) * 2 - 1;
 w1 = w1 ./ norm(w1);
@@ -33,9 +33,11 @@ w2 = w2 ./ norm(w2);
 training_errors = [];
 testing_errors = [];
 
+amount_train_per_epoch = 50;
+
 for i = 1:max_epochs
-    for j = 1:train_len
-        
+    i
+    for j = 1:amount_train_per_epoch        
         point_idx = randi(size(data_train,1));
         point = data_train(point_idx,:);
         tau = label_train(point_idx);
@@ -61,3 +63,5 @@ end
 plot(training_errors)
 hold on
 plot(testing_errors)
+legend('Train Error','Test Error')
+
