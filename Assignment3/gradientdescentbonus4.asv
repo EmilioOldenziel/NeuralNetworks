@@ -4,41 +4,41 @@ dat = load("assignment3_data");
 data = dat.xi;
 data = data';
 
+% Training/Testing set 
 train_len = length(data) * 0.80;
 test_len = length(data) - train_len;
 
 data_train = data(1:train_len,:);
 data_test = data(train_len + 1:end,:);
 
+% Generate labels
 label = dat.tau;
 label_train = label(1:train_len);
 label_test = label(train_len + 1:end);
 
 [N, P] = size(dat.xi);
 
-% XOR Validation
-% data = [0 0; 0 1; 1 0; 1 1]
-% label = [0 1 1 1]'
-% N = 2
-% P = 4
-
 max_epochs = 200;
 lr = 0.0005;
 
+% Initialize weights
 w1 = randi([0 1], 1, N) * 2 - 1;
 w1 = w1 ./ norm(w1);
 w2 = randi([0 1], 1, N) * 2 - 1;
 w2 = w2 ./ norm(w2);
 
+% Maintain errors per epoch
 training_errors = [];
 testing_errors = [];
 
+% Maintain weights after each epoch
 weights1_all = []
 weights2_all = []
 
 for i = 1:max_epochs
-    i
-    for j = 1:train_len        
+    for j = 1:train_len
+        
+        % Get random example and the label from training set
         point_idx = randi(size(data_train,1));
         point = data_train(point_idx,:);
         tau = label_train(point_idx);
@@ -89,10 +89,10 @@ figure;
 bar(weights1_all(200,:))
 xlabel('Weight (weight vector 1)')
 ylabel('Value')
-title('Weights with their values (plateau state)')
+title('Weights with their values (after convergence)')
 
 figure;
-bar(weights1_all(200,:))
-xlabel('Weight (weight vector 1)')
+bar(weights2_all(200,:))
+xlabel('Weight (weight vector 2)')
 ylabel('Value')
 title('Weights with their values (after convergence)')
