@@ -65,5 +65,8 @@ end
 plot(training_errors)
 hold on
 plot(testing_errors)
+xlabel('Epoch')
+ylabel('Error')
+title('Error vs epoch')
 legend('Train Error','Test Error')
 

@@ -22,8 +22,8 @@ label_test = label(train_len + 1:end);
 % N = 2
 % P = 4
 
-max_epochs = 100;
-lr = 0.02;
+max_epochs = 200;
+lr = 0.0005;
 
 w1 = randi([0 1], 1, N) * 2 - 1;
 w1 = w1 ./ norm(w1);
@@ -33,14 +33,12 @@ w2 = w2 ./ norm(w2);
 training_errors = [];
 testing_errors = [];
 
-amount_train_per_epoch = 50;
-
 weights1_all = []
 weights2_all = []
 
 for i = 1:max_epochs
     i
-    for j = 1:amount_train_per_epoch        
+    for j = 1:train_len        
         point_idx = randi(size(data_train,1));
         point = data_train(point_idx,:);
         tau = label_train(point_idx);
@@ -70,5 +68,31 @@ end
 plot(training_errors)
 hold on
 plot(testing_errors)
+xlabel('Epoch')
+ylabel('Error')
+title('Error vs epoch')
 legend('Train Error','Test Error')
 
+figure;
+bar(weights1_all(40,:))
+xlabel('Weight (weight vector 1)')
+ylabel('Value')
+title('Weights with their values (plateau state)')
+
+figure;
+bar(weights2_all(40,:))
+xlabel('Weight (weight vector 2)')
+ylabel('Value')
+title('Weights with their values (plateau state)')
+
+figure;
+bar(weights1_all(200,:))
+xlabel('Weight (weight vector 1)')
+ylabel('Value')
+title('Weights with their values (after convergence)')
+
+figure;
+bar(weights2_all(200,:))
+xlabel('Weight (weight vector 2)')
+ylabel('Value')
+title('Weights with their values (after convergence)')

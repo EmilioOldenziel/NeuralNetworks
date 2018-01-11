@@ -22,8 +22,8 @@ label_test = label(train_len + 1:end);
 % N = 2
 % P = 4
 
-max_epochs = 100;
-lr = 0.02;
+max_epochs = 200;
+lr = 0.0005;
 
 w1 = randi([0 1], 1, N) * 2 - 1;
 w1 = w1 ./ norm(w1);
@@ -63,5 +63,8 @@ end
 plot(training_errors)
 hold on
 plot(testing_errors)
+xlabel('Epoch')
+ylabel('Error')
+title('Error vs epoch')
 legend('Train Error','Test Error')
 
