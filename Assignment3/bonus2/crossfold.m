@@ -1,13 +1,13 @@
 
 
 % Initialization values
-dat = load('assignment3_data');
+dat = load('../assignment3_data');
 
 xi = dat.xi;
 xi = xi';
 
 tau = dat.tau;
-tau = tau'
+tau = tau';
 
 kfold = 5;
 
@@ -27,6 +27,9 @@ end
 
 figure;
 bar(errors);
+xlabel('fold')
+ylabel('test error')
 hold on;
-plot((1:kfold),ones(1,kfold)*mean(errors),'r');
+mean_error = mean(errors)
+plot((1:kfold),ones(1,kfold)*mean_error,'r');
 legend('test error', 'mean test error')

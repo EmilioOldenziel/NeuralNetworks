@@ -1,5 +1,5 @@
 % Initialization values
-dat = load("assignment3_data");
+dat = load('assignment3_data');
 
 data = dat.xi;
 data = data';
