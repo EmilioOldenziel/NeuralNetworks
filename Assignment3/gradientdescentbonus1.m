@@ -1,5 +1,5 @@
 % Initialization values
-dat = load("assignment3_data");
+dat = load('assignment3_data');
 
 data = dat.xi;
 data = data';
@@ -18,9 +18,8 @@ label_test = label(train_len + 1:end);
 
 [N, P] = size(dat.xi);
 
-max_epochs = 200;
-lr = 0.1;
-decay = 0.001;
+max_epochs = 100;
+lr = 0.001;
 
 % Initialize weights
 w1 = randi([0 1], 1, N) * 2 - 1;
@@ -28,50 +27,54 @@ w1 = w1 ./ norm(w1);
 w2 = randi([0 1], 1, N) * 2 - 1;
 w2 = w2 ./ norm(w2);
 
-% Maintain errors per epoch
-training_errors = [];
-testing_errors = [];
 
-lrdec = []
-for i = 1:max_epochs
-    
-    % Decrease learning rate according to a decay parameter
-    lr = lr * 1/(1 + decay * i)
-    lrdec = [lrdec lr];
-    
-    for j = 1:train_len  
-        
-        % Get random example and the label from training set
-        point_idx = randi(size(data_train,1));
-        point = data_train(point_idx,:);
-        tau = label_train(point_idx);
 
-        % forward prop
-        sigma = tanh(w1 * point') + tanh(w2 * point');
+amounts_train_per_epoch = [10, 50, 100, 200];
+figure;
+subplot_nr = 1;
+for amount_train_per_epoch = amounts_train_per_epoch
+    % Maintain errors per epoch
+    training_errors = [];
+    testing_errors = [];
+    for i = 1:max_epochs
+        for j = 1:amount_train_per_epoch   
 
-        % Backward prop, compute delta weights and adjust weights
-        delta_w1 = (sigma - tau) * (1 - tanh(point * w1')^2) * point;
-        delta_w2 = (sigma - tau) * (1 - tanh(point * w2')^2) * point;
+            % Get random example and the label from training set
+            point_idx = randi(amount_train_per_epoch);
+            point = data_train(point_idx,:);
+            tau = label_train(point_idx);
 
-        w1 = w1 - lr * delta_w1;
-        w2 = w2 - lr * delta_w2;
+            % forward prop
+            sigma = tanh(w1 * point') + tanh(w2 * point');
+
+            % Backward prop, compute delta weights and adjust weights
+            delta_w1 = (sigma - tau) * (1 - tanh(point * w1')^2) * point;
+            delta_w2 = (sigma - tau) * (1 - tanh(point * w2')^2) * point;
+
+            w1 = w1 - lr * delta_w1;
+            w2 = w2 - lr * delta_w2;
+        end
+
+        % Compute train and test error after epoch
+        error_train = 1 / amount_train_per_epoch * sum(((tanh(w1 * data_train(1:amount_train_per_epoch,:)') + tanh(w2 * data_train(1:amount_train_per_epoch,:)') - label_train(1:amount_train_per_epoch)).^2) / 2);
+        error_test = 1 / test_len * sum(((tanh(w1 * data_test') + tanh (w2 * data_test') - label_test).^2) / 2);
+
+        % Store errors for visualization
+        training_errors = [training_errors error_train];
+        testing_errors = [testing_errors error_test];
     end
+
+    subplot(2,2,subplot_nr);
+    subplot_nr = subplot_nr + 1;
+    % Visualize errors
+    plot(training_errors)
+    hold on
+    plot(testing_errors)
+    xlabel('Epoch')
+    ylabel('Error')
+    title(['Error vs epoch with ' num2str(amount_train_per_epoch) ' training samples per epoch'])
+    legend('Train Error','Test Error')
     
-    % Compute train and test error after epoch
-    error_train = 1 / train_len * sum(((tanh(w1 * data_train') + tanh(w2 * data_train') - label_train).^2) / 2);
-    error_test = 1 / test_len * sum(((tanh(w1 * data_test') + tanh (w2 * data_test') - label_test).^2) / 2);
-    
-    % Store errors for visualization
-    training_errors = [training_errors error_train];
-    testing_errors = [testing_errors error_test];
 end
 
-% Visualize errors
-plot(training_errors)
-hold on
-plot(testing_errors)
-xlabel('Epoch')
-ylabel('Error')
-title('Error vs epoch')
-legend('Train Error','Test Error')
 
