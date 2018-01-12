@@ -1,7 +1,7 @@
 
 
 % Initialization values
-dat = load('../assignment3_data');
+dat = load('assignment3_data');
 
 data_xi = dat.xi;
 data_xi = data_xi';
