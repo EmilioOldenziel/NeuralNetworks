@@ -18,8 +18,8 @@ label_test = label(train_len + 1:end);
 
 [N, P] = size(dat.xi);
 
-max_epochs = 200;
-lr = 0.05;
+max_epochs = 10000;
+lr = 0.001;
 
 % Initialize weights
 w1 = randi([0 1], 1, N) * 2 - 1;
@@ -32,6 +32,7 @@ training_errors = [];
 testing_errors = [];
 
 for i = 1:max_epochs
+    i
     for j = 1:train_len   
         
         % Get random example and the label from training set
