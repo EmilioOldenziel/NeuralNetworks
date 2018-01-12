@@ -18,7 +18,7 @@ label_test = label(train_len + 1:end);
 
 [N, P] = size(dat.xi);
 
-max_epochs = 100;
+max_epochs = 200;
 lr = 0.1;
 decay = 0.001;
 
