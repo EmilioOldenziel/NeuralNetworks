@@ -2,7 +2,7 @@ nd = 50;
 
 alphas = 0.25:0.25:6;
 
-Ns = [10 ];%20 50 100 200];
+Ns = [10 20 50 100 200];
 
 % generalisation error curve for every N
 gen_error = zeros(length(alphas),length(Ns));
@@ -118,7 +118,7 @@ for i=1:1:length(Ns)
     errorbar(alphas,gen_error(i,:), gen_error_std(i,:));
     hold on;
     % legenda labels
-    l = [l; ['N=' num2str(Ns(1,i))]]
+    l = strvcat(l, ['N=' num2str(Ns(1,i))])
 end
 title(['Generalisation error Minover, n_{d}=' num2str(nd) ' max epochs=' num2str(max_epochs)]);
 xlabel('\alpha');
