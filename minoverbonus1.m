@@ -1,4 +1,4 @@
-nd = 100;
+nd = 50;
 
 alphas = 0.25:0.25:12;
 
@@ -20,8 +20,8 @@ for a = alphas
         weights = zeros(1, N);
         
         % Generate random P labels being -1 or 1 
-        label = randi([0 1], 1, P) * 2 - 1;
-        %label = sign(ones(1, N) * data'); 
+        %label = randi([0 1], 1, P) * 2 - 1;
+        label = sign(ones(1, N) * data'); 
 
         % Use just as many weights as inputs
         old_weights = weights;
@@ -39,7 +39,7 @@ for a = alphas
         
         % Calculate kmax after training
         stability = data * weights' .* label' / norm(weights);
-        [val, idx] = min(stability);
+        [val, idx] = max(stability);
         cumkappa = [cumkappa val];
     end
     kappa_final = [kappa_final, mean(cumkappa)];

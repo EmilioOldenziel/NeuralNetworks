@@ -6,6 +6,8 @@ lambda = [0 0.1 0.2 0.3 0.4 0.5];
 
 % generalisation error curve for every N
 gen_error = zeros(length(alphas),length(Ns));
+gen_error_std = zeros(length(alphas),length(Ns));
+
 for l = lambda
     l
     for a = alphas
@@ -15,7 +17,7 @@ for l = lambda
             % Initialization values
             N = 100;
             P = round(a*N);
-            max_epochs = 3000;
+            max_epochs = 30;
 
             % Generate P datapoints from N-dimensional gaussian (mean = 0, std = 1)
             data = 0 + sqrt(1) * randn(P, N);
@@ -65,16 +67,15 @@ for l = lambda
         ii = find(lambda == l);
         jj = find(alphas == a);
         gen_error(ii,jj) = mean(cumerror);
+        gen_error_std(ii,jj) = std(cumerror);
     end
 end
- 
-%%
 
 figure;
 l = [];
 % plot curve for each N
 for i=1:1:length(lambda)
-    plot(alphas,gen_error(i,:));
+    errorbar(alphas,gen_error(i,:), gen_error_std(i,:));
     hold on;
     % legenda labels
     l = strvcat(l, ['lambda=' num2str(lambda(1,i))])
