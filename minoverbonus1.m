@@ -3,7 +3,7 @@ nd = 50;
 alphas = 0.25:0.25:12;
 
 kappa_final = [];
-kappa_final_var = [];
+kappa_final_std = [];
 
 for a = alphas
     cumkappa = [];
@@ -20,8 +20,8 @@ for a = alphas
         weights = zeros(1, N);
         
         % Generate random P labels being -1 or 1 
-        %label = randi([0 1], 1, P) * 2 - 1;
-        label = sign(ones(1, N) * data'); 
+        label = randi([0 1], 1, P) * 2 - 1;
+        %label = sign(ones(1, N) * data'); 
 
         % Use just as many weights as inputs
         old_weights = weights;
@@ -43,11 +43,11 @@ for a = alphas
         cumkappa = [cumkappa val];
     end
     kappa_final = [kappa_final, mean(cumkappa)];
-    kappa_final_var = [kappa_final_var, var(cumkappa)];
+    kappa_final_std = [kappa_final_std, std(cumkappa)];
 end
 
 figure;
-errorbar(alphas,kappa_final, kappa_final_var);
+errorbar(alphas,kappa_final, kappa_final_std);
 title(['Maximum stability vs alpha, n_{d}=' num2str(nd) ' N=' num2str(N)]);
 xlabel('\alpha');
 ylabel('Maximum stability \kappa_{max}');
