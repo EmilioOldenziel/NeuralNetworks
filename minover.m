@@ -15,7 +15,7 @@ for N=Ns
         for run = 1:nd
             % Initialization values
             P = round(a*N);
-            max_epochs = 100;
+            max_epochs = 3000;
 
             % Generate P datapoints from N-dimensional gaussian (mean = 0, std = 1)
             data = 0 + sqrt(1) * randn(P, N);
@@ -52,7 +52,8 @@ figure;
 l = [];
 % plot curve for each N
 for i=1:1:length(Ns)
-    errorbar(alphas,gen_error(i,:), gen_error_std(i,:));
+    %errorbar(alphas,gen_error(i,:), gen_error_std(i,:));
+    plot(alphas,gen_error(i,:));
     hold on;
     % legenda labels
     l = strvcat(l, ['N=' num2str(Ns(1,i))])

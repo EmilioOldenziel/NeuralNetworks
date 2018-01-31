@@ -57,7 +57,8 @@ subplot(1,2,1)
 l = [];
 % plot curve for each N
 for i=1:1:length(Ns)
-    errorbar(alphas,gen_error(i,:), gen_error_std(i,:));
+    %errorbar(alphas,gen_error(i,:), gen_error_std(i,:));
+    plot(alphas,gen_error(i,:))
     hold on;
     % legenda labels
     l = strvcat(l, ['N=' num2str(Ns(1,i))])
@@ -115,7 +116,8 @@ subplot(1,2,2)
 l = [];
 % plot curve for each N
 for i=1:1:length(Ns)
-    errorbar(alphas,gen_error(i,:), gen_error_std(i,:));
+    %errorbar(alphas,gen_error(i,:), gen_error_std(i,:));
+    plot(alphas,gen_error(i,:))
     hold on;
     % legenda labels
     l = strvcat(l, ['N=' num2str(Ns(1,i))])
