@@ -1,22 +1,22 @@
 nd = 50;
 
-alphas = 0.1:0.1:3;
+alphas = 0.25:0.25:3;
 
-useBias = 1;
+useBias = 0;
 
 Q_list = zeros(1, length(alphas));
+Q_list_std = zeros(1, length(alphas));
 q_ind = 1;
 
-pool = gcp();
-
 for a = alphas
-    Q = 0;   
+    Qs = [];   
     a
-    parfor run = 1:nd
+    for run = 1:nd
+        Q = 0;
         % Initialization values
-        N = 200;
+        N = 20;
         P = round(a*N);
-        max_epochs = 500;
+        max_epochs = 100;
 
         % Generate P datapoints from N-dimensional gaussian (mean = 0, std = 1)
         data = 0 + sqrt(1) * randn(P, N);
@@ -45,14 +45,16 @@ for a = alphas
                 break;
             end
         end
+        Qs = [Qs Q];
     end
 
     % list holding fraction of successful runs as a function of a
-    Q_list(q_ind) = Q / nd;
+    Q_list(q_ind) = sum(Qs) ./ nd;
+    Q_list_std(q_ind) = std(Qs ./ nd);
     q_ind = q_ind + 1;
 end
 
-plot(alphas, Q_list)
+errorbar(alphas, Q_list, Q_list_std);
 xlim([0 4]);
 ylim([0 1]);
 title(['Fraction of succesful runs as a function of \alpha']);

@@ -2,11 +2,9 @@ nd = 200;
 
 alphas = 0.25:0.25:3;
 
-useBias = 1;
+useBias = 0;
 
-thresholds = [0:0.2:1];
-
-pool = gcp();
+thresholds = -1:0.2:1;
 
 for t = thresholds
     Q_list = zeros(1, length(alphas));
@@ -14,7 +12,7 @@ for t = thresholds
     for a = alphas
         Q = 0;   
         t, a
-        parfor run = 1:nd
+        for run = 1:nd
             % Initialization values
             N = 200;
             P = round(a*N);
@@ -54,7 +52,8 @@ for t = thresholds
         q_ind = q_ind + 1;
     end
 
-    plot(alphas, Q_list, 'DisplayName',['threshold = ' num2str(t)])
+    %errorbar(alphas, Q_list, Q_list_std, 'DisplayName',['threshold = ' num2str(t)])
+    plot(alphas, Q_list,'DisplayName',['threshold = ' num2str(t)])
     xlim([0 4]);
     ylim([0 1]);
     title('Fraction of succesful runs as a function of \alpha')
